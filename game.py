@@ -27,7 +27,6 @@ wheat_positions = [
 ]
 mixer = None
 
-#test
 class Game:
 
     def __init__(self):
