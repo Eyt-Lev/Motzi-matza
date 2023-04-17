@@ -27,10 +27,11 @@ wheat_positions = [
 ]
 mixer = None
 
+
 class Game:
 
     def __init__(self):
-        self.level = 2.5
+        self.level = 0
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -112,38 +113,24 @@ class Game:
 
         # drawing
         VisualizationService.draw_crash_level(GlobalState.SCREEN)
-        VisualizationService.draw_flour_score(
-            self.flourCollected
-        )
-        # Visual points where the crash wheat need to touch:
-        rect = pygame.Rect(
-            0, 0, 4, 4
-        )
-        rect.center = (1025, 460)
-        pygame.draw.rect(GlobalState.SCREEN, (255, 255, 255), rect, 4)
-        rect.center = (995, 460)
-        pygame.draw.rect(GlobalState.SCREEN, (255, 255, 255), rect, 4)
-
+        VisualizationService.draw_flour_score(self.flourCollected)
         for flour in sprites:
-            flour.setPressed()
             flour.draw()
         for wheat in spritesSecondary:
             wheat.draw()
 
-        if self.flourCollected >= 7:
+        if self.flourCollected == 7:
             self.nextLevel()
 
-        if self.crash_wheat_added > 9:
-            if not self.last_succeed:
+        if self.crash_wheat_added == 9:
+            if not self.last_succeed and not self.flourCollected == 7:
                 GlobalState.GAME_STATE = GameStatus.GAME_END
 
         elif len(spritesSecondary) == 0:
             self.add_crash_wheat()
-            self.crash_wheat_added += 1
 
         VisualizationService.draw_wheat_score(
-            10 - self.crash_wheat_added,
-            y=150
+            wheats=self.crash_wheat_added, y=150
         )
 
     def play_watering(self):

@@ -46,6 +46,9 @@ class Dough(pygame.sprite.Sprite):
         GlobalState.game.water_flours_added += 1
         if self.time > 8:
             GlobalState.game.doughCollected += 1
+            MusicService.play_success_sound()
+        else:
+            MusicService.play_fail_sound()
 
     def draw(self):
         self.uglyTime += 0.25
@@ -59,6 +62,7 @@ class Dough(pygame.sprite.Sprite):
         else:
             color = (255, 0, 0)
             self.kill()
+            MusicService.play_fail_sound()
             GlobalState.game.water_flours_added += 1
 
         if self.alive():

@@ -24,6 +24,7 @@ class Mixer(pygame.sprite.Sprite):
         for sprite in group:
             if pygame.sprite.collide_mask(self, sprite):
                 sprite.kill()
+                MusicService.play_success_sound()
                 return True
 
     def draw(self):

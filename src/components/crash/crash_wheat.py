@@ -58,13 +58,13 @@ class CrashWheat(pygame.sprite.Sprite):
         MusicService.play_success_sound()
         GlobalState.game.send_flour()
         GlobalState.game.crash_wheat_added += 1
-        if GlobalState.game.crash_wheat_added < 10:
+        if GlobalState.game.crash_wheat_added == 9:
+            GlobalState.game.last_succeed = True
+        else:
             GlobalState.game.add_crash_wheat()
-        GlobalState.game.last_succeed = True
 
     def on_fail(self):
         self.kill()
         MusicService.play_fail_sound()
-        GlobalState.game.crash_wheat_added += 1
         GlobalState.game.add_crash_wheat()
-        GlobalState.game.last_succeed = False
+        GlobalState.game.crash_wheat_added += 1

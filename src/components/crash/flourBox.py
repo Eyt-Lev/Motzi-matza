@@ -30,21 +30,17 @@ class FlourBox(pygame.sprite.Sprite):
 
     def on_flour_collection(self):
         MusicService.play_flour_pick_up_sound()
-        self.kill()
         GlobalState.game.flourCollected += 1
-
-        if GlobalState.game.crash_wheat_added > 9:
-            if GlobalState.game.flourCollected < 7:
-                GlobalState.GAME_STATE = GameStatus.GAME_END
+        self.kill()
+        GlobalState.game.last_succeed = False
 
     def draw(self):
+        self.setPressed()
         self.x += 28
         self.rect.left, self.rect.top = self.x, self.y
         if self.rect.right >= 1920:
             MusicService.play_fail_sound()
             self.kill()
-
-            if GlobalState.game.crash_wheat_added == 9:
-                GlobalState.GAME_STATE = GameStatus.GAME_END
+            GlobalState.game.last_succeed = False
 
         GlobalState.SCREEN.blit(self.image, self.rect)

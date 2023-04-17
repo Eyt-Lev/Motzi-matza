@@ -4,7 +4,7 @@ import pygame
 
 from paths import AUDIO_DIR
 
-enabled = False
+enabled = True
 
 
 class MusicService:
