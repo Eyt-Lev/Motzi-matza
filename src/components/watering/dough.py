@@ -43,6 +43,7 @@ class Dough(pygame.sprite.Sprite):
 
     def onPress(self):
         self.kill()
+        GlobalState.game.water_flours_added += 1
         if self.time > 8:
             GlobalState.game.doughCollected += 1
 
@@ -58,6 +59,7 @@ class Dough(pygame.sprite.Sprite):
         else:
             color = (255, 0, 0)
             self.kill()
+            GlobalState.game.water_flours_added += 1
 
         if self.alive():
             self.pressRect = pygame.Rect(
@@ -69,12 +71,12 @@ class Dough(pygame.sprite.Sprite):
             GlobalState.SCREEN.blit(self.image, self.rect)
             pygame.draw.rect(
                 GlobalState.SCREEN,
-                (96, 96, 96),
-                self.timeRect,
-                3,
+                color,
+                self.pressRect,
             )
             pygame.draw.rect(
                 GlobalState.SCREEN,
-                color,
-                self.pressRect,
+                (96, 96, 96),
+                self.timeRect,
+                3,
             )

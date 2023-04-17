@@ -13,7 +13,6 @@ from src.components.watering.flourBox import WaterFlourBox
 from src.components.watering.mixer import Mixer
 from src.components.watering.dough import Dough
 
-
 sprites = pygame.sprite.Group()
 spritesSecondary = pygame.sprite.Group()
 spritesThird = pygame.sprite.Group()
@@ -32,7 +31,7 @@ mixer = None
 class Game:
 
     def __init__(self):
-        self.level = 3
+        self.level = 2.5
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -96,10 +95,12 @@ class Game:
             time = 0
 
     @staticmethod
-    def add_crash_wheat(): spritesSecondary.add(CrashWheat((random.randint(750, 1350), 30)))
+    def add_crash_wheat():
+        spritesSecondary.add(CrashWheat((random.randint(750, 1350), 30)))
 
     @staticmethod
-    def send_flour(): sprites.add(FlourBox((1286, 693)))
+    def send_flour():
+        sprites.add(FlourBox((1286, 693)))
 
     def play_crash(self):
         for event in pygame.event.get():
@@ -143,7 +144,7 @@ class Game:
 
         VisualizationService.draw_wheat_score(
             10 - self.crash_wheat_added,
-            y= 150
+            y=150
         )
 
     def play_watering(self):
@@ -154,19 +155,23 @@ class Game:
             for sprite in spritesThird:
                 sprite.handle_event(event)
 
+        if self.water_flours_added == 8:
+            GlobalState.GAME_STATE = GameStatus.GAME_END
+        if self.doughCollected == 5:
+            self.nextLevel()
+
         VisualizationService.draw_watering_bg()
         if len(sprites) == 0:
             mixer = Mixer()
             sprites.add(mixer)
 
         time += 1
-        if self.water_flours_added < 8:
+        if self.water_flours_added < 8 and not self.last_succeed:
             if time == 80:
                 spritesSecondary.add(
                     WaterFlourBox()
                 )
                 time = 0
-                self.water_flours_added += 1
 
         mixer.draw()
         for sprite in spritesSecondary:
@@ -178,6 +183,8 @@ class Game:
             spritesThird.add(
                 Dough((mixer.rect.centerx, mixer.rect.bottom + 10))
             )
+            if self.water_flours_added == 7:
+                self.last_succeed = True
 
         VisualizationService.draw_flour_score(
             score=8 - self.water_flours_added,
@@ -202,6 +209,7 @@ class Game:
         spritesSecondary.empty()
         spritesThird.empty()
         self.level += 0.5
+        self.last_succeed = False
         if not self.level % 1 == 0:
             GlobalState.timer.pauseTimer()
         else:

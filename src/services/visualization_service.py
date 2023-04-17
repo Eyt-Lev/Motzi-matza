@@ -235,6 +235,7 @@ class VisualizationService:
             EXPLAIN_DIR / "bg1.png",
             EXPLAIN_DIR / "bg2.png",
             EXPLAIN_DIR / "bg3.png",
+            EXPLAIN_DIR / "bg4.png",
         ]
 
     @staticmethod
