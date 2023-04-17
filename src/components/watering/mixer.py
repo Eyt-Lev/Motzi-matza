@@ -30,7 +30,7 @@ class Mixer(pygame.sprite.Sprite):
         self.acc = vec(0, 0)
 
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[K_d] or pressed_keys[K_RIGHT] and self.rect.right < 1700:
+        if pressed_keys[K_d] or pressed_keys[K_RIGHT] and self.rect.right < 1680:
             self.acc.x += 6
         elif pressed_keys[K_a] or pressed_keys[K_LEFT] and self.rect.left > 420:
             self.acc.x -= 6
