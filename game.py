@@ -1,6 +1,6 @@
 import random
 import pygame
-# hi!
+
 from src.components.harvest.wheat import Wheat
 from src.components.crash.crash_wheat import CrashWheat
 from src.game_status import GameStatus
