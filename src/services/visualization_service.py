@@ -111,26 +111,40 @@ class VisualizationService:
         VisualizationService.draw_score_background(y)
         wheat = VisualizationService.get_wheat_score_image()
         rect = wheat.get_rect()
-        rect.topright = (1900, y+25)
+        rect.topright = (1900, y + 25)
         GlobalState.SCREEN.blit(wheat, rect)
         font = VisualizationService.get_mc_font()
         font.render_to(
-            GlobalState.SCREEN, (1760, y+30),
+            GlobalState.SCREEN, (1760, y + 30),
             str(wheats),
             (0, 0, 0), None, size=80
         )
 
     @staticmethod
-    def draw_flour_score():
+    def draw_flour_score(score, y=30):
         VisualizationService.draw_score_background(10)
         flour = VisualizationService.get_flour_score_image()
         rect = flour.get_rect()
-        rect.topright = (1900, 30)
+        rect.topright = (1900, y)
         GlobalState.SCREEN.blit(flour, rect)
         font = VisualizationService.get_mc_font()
         font.render_to(
-            GlobalState.SCREEN, (1760, 40),
-            str(GlobalState.game.flourCollected),
+            GlobalState.SCREEN, (1760, y + 10),
+            str(score),
+            (0, 0, 0), None, size=80
+        )
+
+    @staticmethod
+    def draw_dough_score(score, y=30):
+        VisualizationService.draw_score_background(y-15)
+        dough = VisualizationService.get_dough_image()
+        rect = dough.get_rect()
+        rect.topright = (1900, y)
+        GlobalState.SCREEN.blit(dough, rect)
+        font = VisualizationService.get_mc_font()
+        font.render_to(
+            GlobalState.SCREEN, (1760, y + 10),
+            str(score),
             (0, 0, 0), None, size=80
         )
 
@@ -236,5 +250,12 @@ class VisualizationService:
         return pygame.image.load(IMAGES_DIR / "crash_lvl_bg.png").convert_alpha()
 
     @staticmethod
-    def get_mixer_image():
-        return pygame.image.load(IMAGES_DIR / "mixer.png").convert_alpha()
+    def get_mixer_images():
+        return [
+            pygame.image.load(IMAGES_DIR / "mixerTop.png").convert_alpha(),
+            pygame.image.load(IMAGES_DIR / "mixerBottom.png").convert_alpha()
+        ]
+
+    @staticmethod
+    def get_dough_image():
+        return pygame.image.load(IMAGES_DIR / "dough.png").convert_alpha()

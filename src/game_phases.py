@@ -5,7 +5,7 @@ import pygame
 from src.game_status import GameStatus
 from src.global_state import GlobalState
 from src.services.visualization_service import VisualizationService
-from src.components.game import Game
+from game import Game
 
 
 clock = pygame.time.Clock()

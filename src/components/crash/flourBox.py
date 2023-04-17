@@ -14,8 +14,7 @@ class FlourBox(pygame.sprite.Sprite):
         super().__init__()
         self.image = VisualizationService.get_flour_box_img()
         self.rect = self.image.get_rect()
-        self.x = position[0]
-        self.y = position[1]
+        self.x, self.y = position
         self.rect.left, self.rect.top = self.x, self.y
         self.hovered = self.rect.collidepoint(pygame.mouse.get_pos())
         self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]

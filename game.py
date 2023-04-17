@@ -9,11 +9,14 @@ from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 from src.tools import is_close_app_event
 from src.components.crash.flourBox import FlourBox
+from src.components.watering.flourBox import WaterFlourBox
 from src.components.watering.mixer import Mixer
+from src.components.watering.dough import Dough
 
 
 sprites = pygame.sprite.Group()
 spritesSecondary = pygame.sprite.Group()
+spritesThird = pygame.sprite.Group()
 time = 0
 wheat_positions = [
     (3, 213),
@@ -23,6 +26,7 @@ wheat_positions = [
     (1330, 506),
     (1800, 348),
 ]
+mixer = None
 
 
 class Game:
@@ -34,18 +38,8 @@ class Game:
         self.flourCollected = 0
         self.bg = None
         self.last_succeed = False
-
-    def nextLevel(self):
-        global time, sprites, spritesSecondary
-        self.bg = None
-        time = 0
-        sprites.empty()
-        spritesSecondary.empty()
-        self.level += 0.5
-        if not self.level % 1 == 0:
-            GlobalState.timer.pauseTimer()
-        else:
-            GlobalState.timer.continueTimer()
+        self.water_flours_added = 1
+        self.doughCollected = 0
 
     def finishLevel(self):
         self.nextLevel()
@@ -118,15 +112,17 @@ class Game:
 
         # drawing
         VisualizationService.draw_crash_level(GlobalState.SCREEN)
-        VisualizationService.draw_flour_score()
+        VisualizationService.draw_flour_score(
+            self.flourCollected
+        )
         # Visual points where the crash wheat need to touch:
-        # rect = pygame.Rect(
-        #     0, 0, 4, 4
-        # )
-        # rect.center = (1025, 460)
-        # pygame.draw.rect(GlobalState.SCREEN, (255, 255, 255), rect, 4)
-        # rect.center = (995, 460)
-        # pygame.draw.rect(GlobalState.SCREEN, (255, 255, 255), rect, 4)
+        rect = pygame.Rect(
+            0, 0, 4, 4
+        )
+        rect.center = (1025, 460)
+        pygame.draw.rect(GlobalState.SCREEN, (255, 255, 255), rect, 4)
+        rect.center = (995, 460)
+        pygame.draw.rect(GlobalState.SCREEN, (255, 255, 255), rect, 4)
 
         for flour in sprites:
             flour.setPressed()
@@ -147,23 +143,66 @@ class Game:
 
         VisualizationService.draw_wheat_score(
             10 - self.crash_wheat_added,
-            150
+            y= 150
         )
 
     def play_watering(self):
+        global time, mixer
         for event in pygame.event.get():
             if is_close_app_event(event):
                 GlobalState.GAME_STATE = GameStatus.GAME_END
+            for sprite in spritesThird:
+                sprite.handle_event(event)
+
         VisualizationService.draw_watering_bg()
         if len(sprites) == 0:
-            sprites.add(
-                Mixer()
+            mixer = Mixer()
+            sprites.add(mixer)
+
+        time += 1
+        if self.water_flours_added < 8:
+            if time == 80:
+                spritesSecondary.add(
+                    WaterFlourBox()
+                )
+                time = 0
+                self.water_flours_added += 1
+
+        mixer.draw()
+        for sprite in spritesSecondary:
+            sprite.draw()
+        for sprite in spritesThird:
+            sprite.draw()
+
+        if mixer.check_collision(spritesSecondary):
+            spritesThird.add(
+                Dough((mixer.rect.centerx, mixer.rect.bottom + 10))
             )
 
-        for sprite in sprites:
-            sprite.draw()
+        VisualizationService.draw_flour_score(
+            score=8 - self.water_flours_added,
+        )
+
+        VisualizationService.draw_dough_score(
+            score=self.doughCollected,
+            y=160
+        )
+
     def play_rolling(self):
         pass
 
     def play_cooking(self):
         pass
+
+    def nextLevel(self):
+        global time, sprites, spritesSecondary, spritesThird
+        self.bg = None
+        time = 0
+        sprites.empty()
+        spritesSecondary.empty()
+        spritesThird.empty()
+        self.level += 0.5
+        if not self.level % 1 == 0:
+            GlobalState.timer.pauseTimer()
+        else:
+            GlobalState.timer.continueTimer()
