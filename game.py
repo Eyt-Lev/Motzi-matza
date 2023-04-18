@@ -12,6 +12,7 @@ from src.components.crash.flourBox import FlourBox
 from src.components.watering.flourBox import WaterFlourBox
 from src.components.watering.mixer import Mixer
 from src.components.watering.dough import Dough
+from src.components.endScreen import Reasons
 
 sprites = pygame.sprite.Group()
 spritesSecondary = pygame.sprite.Group()
@@ -27,12 +28,11 @@ wheat_positions = [
 ]
 mixer = None
 
-#test
 
 class Game:
 
     def __init__(self):
-        self.level = 0
+        self.level = 2.5
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -40,6 +40,7 @@ class Game:
         self.last_succeed = False
         self.water_flours_added = 1
         self.doughCollected = 0
+        self.deathMsg = None
 
     def finishLevel(self):
         self.nextLevel()
@@ -58,10 +59,11 @@ class Game:
         else:
             self.explain()
         if self.level % 1 == 0:
-            GlobalState.timer.update()
-            GlobalState.timer.showTime(GlobalState.SCREEN)
-            if GlobalState.timer.fixedTime == "18:00":
-                GlobalState.GAME_STATE = GameStatus.GAME_END
+            GlobalState.TIMER.update()
+            GlobalState.TIMER.showTime(GlobalState.SCREEN)
+            if GlobalState.TIMER.fixedTime == "18:00":
+                self.deathMsg = Reasons.ranOutOfTime
+                GlobalState.GAME_STATE = GameStatus.GAME_FAILED
 
     def explain(self):
         if self.bg is None:
@@ -125,7 +127,8 @@ class Game:
 
         if self.crash_wheat_added == 9:
             if not self.last_succeed and not self.flourCollected == 7:
-                GlobalState.GAME_STATE = GameStatus.GAME_END
+                self.deathMsg = Reasons.wheatCrashOver
+                GlobalState.GAME_STATE = GameStatus.GAME_FAILED
 
         elif len(spritesSecondary) == 0:
             self.add_crash_wheat()
@@ -143,7 +146,8 @@ class Game:
                 sprite.handle_event(event)
 
         if self.water_flours_added == 8:
-            GlobalState.GAME_STATE = GameStatus.GAME_END
+            self.deathMsg = Reasons.flourBoxesOver
+            GlobalState.GAME_STATE = GameStatus.GAME_FAILED
         if self.doughCollected == 5:
             self.nextLevel()
 
@@ -198,6 +202,24 @@ class Game:
         self.level += 0.5
         self.last_succeed = False
         if not self.level % 1 == 0:
-            GlobalState.timer.pauseTimer()
+            GlobalState.TIMER.pauseTimer()
         else:
-            GlobalState.timer.continueTimer()
+            GlobalState.TIMER.continueTimer()
+
+    def reset(self):
+        if self.level != 0:
+            global time, sprites, spritesSecondary, spritesThird
+            MusicService.play_end_sound()
+            time = 0
+            sprites.empty()
+            spritesSecondary.empty()
+            spritesThird.empty()
+            self.level = 0
+            self.crash_wheat_added = 0
+            self.wheatsCollected = 0
+            self.flourCollected = 0
+            self.bg = None
+            self.last_succeed = False
+            self.water_flours_added = 1
+            self.doughCollected = 0
+            GlobalState.TIMER.pauseTimer()

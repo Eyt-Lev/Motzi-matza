@@ -6,10 +6,10 @@ from src.game_status import GameStatus
 from src.global_state import GlobalState
 from src.services.visualization_service import VisualizationService
 from game import Game
-
+from src.components.endScreen import EndScreen, Reasons
 
 clock = pygame.time.Clock()
-GlobalState.game = Game()
+GlobalState.GAME = Game()
 
 
 def main_menu_phase():
@@ -24,7 +24,14 @@ def start_game():
 
 
 def gameplay_phase():
-    GlobalState.game.playLevel()
+    GlobalState.GAME.playLevel()
+
+
+def failed_phase():
+    GlobalState.GAME.reset()
+    EndScreen.draw(
+        GlobalState.GAME.deathMsg
+    )
 
 
 def exit_game_phase():

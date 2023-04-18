@@ -6,10 +6,11 @@ from src.services.timer_service import TimerService
 
 
 class GlobalState:
-    game = None
     GAME_STATE = GameStatus.MAIN_MENU
     SCREEN = None
-    timer = TimerService()
+
+    GAME = None
+    TIMER = TimerService()
 
     @staticmethod
     def load_main_screen():

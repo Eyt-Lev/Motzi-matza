@@ -73,7 +73,7 @@ class VisualizationService:
             img=VisualizationService.get_explain_box_btn(),
             hoverImage=VisualizationService.get_explain_box_btn_hovered(),
             onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=GlobalState.game.nextLevel,
+            onclickFunction=GlobalState.GAME.nextLevel,
             onePress=True
         )
         for event in pygame.event.get():
@@ -160,6 +160,47 @@ class VisualizationService:
         bg = VisualizationService.get_watering_bg_image()
         GlobalState.SCREEN.blit(bg, bg.get_rect())
 
+    @staticmethod
+    def draw_end_screen(reason):
+        screen = GlobalState.SCREEN
+        VisualizationService.draw_end_screen_background(screen)
+        VisualizationService.draw_end_screen_reason(screen, reason)
+        VisualizationService.draw_end_screen_btn()
+
+    @staticmethod
+    def draw_end_screen_btn():
+        img, hovered_img = VisualizationService.get_end_btn_images()
+        btn = Button(
+            GlobalState.SCREEN,
+            0, 0, img=img, hoverImage=hovered_img,
+            center=False, onHoverFunction=VisualizationService.on_btns_hover
+        )
+        for event in pygame.event.get():
+            if is_close_app_event(event):
+                GlobalState.GAME_STATE = GameStatus.GAME_END
+            btn.handleEvent(event)
+        btn.draw()
+
+    @staticmethod
+    def draw_end_screen_reason(screen, reason):
+        pos = 0
+        for line in reason:
+            pos += 1
+            VisualizationService.get_mc_font().render_to(
+                screen,
+                (Config.WIDTH / 2 - 80, Config.HEIGHT / 2 + 20 + (60 * pos)),
+                line,
+                (255, 255, 255),
+                size=40
+            )
+
+    @staticmethod
+    def draw_end_screen_background(screen):
+        bg = VisualizationService.get_end_screen_image()
+        screen.blit(bg, bg.get_rect())
+        text = VisualizationService.get_end_screen_text()
+        screen.blit(text, text.get_rect())
+
     # Other
     @staticmethod
     def get_logo():
@@ -176,6 +217,13 @@ class VisualizationService:
     @staticmethod
     def on_btns_hover():
         MusicService.play_click_sound()
+
+    @staticmethod
+    def get_end_btn_images():
+        return [
+            pygame.image.load(IMAGES_DIR / 'end_btn.png').convert_alpha(),
+            pygame.image.load(IMAGES_DIR / 'end_btn_hovered.png').convert_alpha()
+        ]
 
     @staticmethod
     def get_main_menu_background():
@@ -208,6 +256,10 @@ class VisualizationService:
     @staticmethod
     def get_explain_box_image():
         return pygame.image.load(EXPLAIN_DIR / "explain box.png").convert_alpha()
+
+    @staticmethod
+    def get_end_screen_text():
+        return pygame.image.load(IMAGES_DIR / "failed_txt.png").convert_alpha()
 
     @staticmethod
     def get_explain_box_btn():
@@ -261,3 +313,7 @@ class VisualizationService:
     @staticmethod
     def get_dough_image():
         return pygame.image.load(IMAGES_DIR / "dough.png").convert_alpha()
+
+    @staticmethod
+    def get_end_screen_image():
+        return pygame.image.load(IMAGES_DIR / "end_bg.png").convert_alpha()

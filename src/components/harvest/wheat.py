@@ -26,9 +26,9 @@ class Wheat(pygame.sprite.Sprite):
     def on_wheat_collection(self):
         MusicService.play_wheat_break_sound()
         self.kill()
-        GlobalState.game.wheatsCollected += 1
-        if GlobalState.game.wheatsCollected == 9:
-            GlobalState.game.finishLevel()
+        GlobalState.GAME.wheatsCollected += 1
+        if GlobalState.GAME.wheatsCollected == 9:
+            GlobalState.GAME.finishLevel()
 
     def draw(self):
         GlobalState.SCREEN.blit(self.image, self.rect)

@@ -21,7 +21,7 @@ class WaterFlourBox(pygame.sprite.Sprite):
         self.rect.right, self.rect.top = self.x, self.y
         if self.y >= 750:   # Touching the floor
             self.kill()
-            GlobalState.game.water_flours_added += 1
+            GlobalState.GAME.water_flours_added += 1
             MusicService.play_fail_sound()
         elif self.x >= 530:    # In the air
             self.y += 20

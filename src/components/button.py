@@ -10,6 +10,7 @@ class Button:
             width=None, height=None, color=None,
             font=None, textColor=None, buttonText=None, border=0,
             onclickFunction=None, onHoverFunction=None, onePress=False,
+            center=True
     ):
         self.x = x
         self.y = y
@@ -22,7 +23,11 @@ class Button:
         if img is not None:
             self.img = img
             self.imgRect = img.get_rect()
-            self.imgRect.center = x, y
+            self.center = center
+            if self.center:
+                self.imgRect.center = x, y
+            else:
+                self.imgRect.left, self.imgRect.top = x, y
 
             self.hoverd = self.imgRect.collidepoint(*pygame.mouse.get_pos()) and pygame.mask.from_surface(img).get_at((pygame.mouse.get_pos()[0] - self.imgRect.x, pygame.mouse.get_pos()[1] - self.imgRect.y))
             if hoverImage is not None:

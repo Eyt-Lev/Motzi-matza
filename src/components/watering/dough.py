@@ -43,9 +43,9 @@ class Dough(pygame.sprite.Sprite):
 
     def onPress(self):
         self.kill()
-        GlobalState.game.water_flours_added += 1
+        GlobalState.GAME.water_flours_added += 1
         if self.time > 8:
-            GlobalState.game.doughCollected += 1
+            GlobalState.GAME.doughCollected += 1
             MusicService.play_success_sound()
         else:
             MusicService.play_fail_sound()
@@ -63,7 +63,7 @@ class Dough(pygame.sprite.Sprite):
             color = (255, 0, 0)
             self.kill()
             MusicService.play_fail_sound()
-            GlobalState.game.water_flours_added += 1
+            GlobalState.GAME.water_flours_added += 1
 
         if self.alive():
             self.pressRect = pygame.Rect(
