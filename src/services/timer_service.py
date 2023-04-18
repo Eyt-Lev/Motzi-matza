@@ -42,3 +42,7 @@ class TimerService:
                 (0, 0, 0), None, size=80
             )
 
+    def reset(self):
+        self.ticking = False
+        self.time = 0
+        self.fixedTime = ""

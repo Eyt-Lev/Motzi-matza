@@ -222,4 +222,9 @@ class Game:
             self.last_succeed = False
             self.water_flours_added = 1
             self.doughCollected = 0
-            GlobalState.TIMER.pauseTimer()
+            GlobalState.TIMER.reset()
+
+    @staticmethod
+    def start():
+        GlobalState.GAME = Game()
+        GlobalState.GAME_STATE = GameStatus.GAMEPLAY

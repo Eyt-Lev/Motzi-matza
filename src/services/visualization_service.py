@@ -173,7 +173,8 @@ class VisualizationService:
         btn = Button(
             GlobalState.SCREEN,
             0, 0, img=img, hoverImage=hovered_img,
-            center=False, onHoverFunction=VisualizationService.on_btns_hover
+            center=False, onHoverFunction=VisualizationService.on_btns_hover,
+            onclickFunction=GlobalState.GAME.start
         )
         for event in pygame.event.get():
             if is_close_app_event(event):
