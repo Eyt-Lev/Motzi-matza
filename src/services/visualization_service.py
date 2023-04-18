@@ -169,6 +169,9 @@ class VisualizationService:
 
     @staticmethod
     def draw_end_screen_btn():
+        def goHome():
+            GlobalState.GAME_STATE = GameStatus.MAIN_MENU
+
         img, hovered_img = VisualizationService.get_end_btn_images()
         btn = Button(
             GlobalState.SCREEN,
@@ -176,11 +179,20 @@ class VisualizationService:
             center=False, onHoverFunction=VisualizationService.on_btns_hover,
             onclickFunction=GlobalState.GAME.start
         )
+        img, hovered_img = VisualizationService.get_home_btn_images()
+        home = Button(
+            GlobalState.SCREEN, 0, 0, img=img, hoverImage=hovered_img,
+            center=False, onHoverFunction=VisualizationService.on_btns_hover,
+            onclickFunction=goHome
+        )
+
         for event in pygame.event.get():
             if is_close_app_event(event):
                 GlobalState.GAME_STATE = GameStatus.GAME_END
             btn.handleEvent(event)
+            home.handleEvent(event)
         btn.draw()
+        home.draw()
 
     @staticmethod
     def draw_end_screen_reason(screen, reason):
@@ -309,6 +321,13 @@ class VisualizationService:
         return [
             pygame.image.load(IMAGES_DIR / "mixerTop.png").convert_alpha(),
             pygame.image.load(IMAGES_DIR / "mixerBottom.png").convert_alpha()
+        ]
+
+    @staticmethod
+    def get_home_btn_images():
+        return [
+            pygame.image.load(IMAGES_DIR / "home_btn.png").convert_alpha(),
+            pygame.image.load(IMAGES_DIR / "home_btn_hovered.png").convert_alpha()
         ]
 
     @staticmethod

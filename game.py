@@ -32,7 +32,7 @@ mixer = None
 class Game:
 
     def __init__(self):
-        self.level = 2.5
+        self.level = 0
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -41,8 +41,10 @@ class Game:
         self.water_flours_added = 1
         self.doughCollected = 0
         self.deathMsg = None
+        self.last_level_completed = 0.5
 
     def finishLevel(self):
+        self.last_level_completed += 1
         self.nextLevel()
 
     def playLevel(self):
@@ -123,7 +125,7 @@ class Game:
             wheat.draw()
 
         if self.flourCollected == 7:
-            self.nextLevel()
+            self.finishLevel()
 
         if self.crash_wheat_added == 9:
             if not self.last_succeed and not self.flourCollected == 7:
@@ -149,7 +151,7 @@ class Game:
             self.deathMsg = Reasons.flourBoxesOver
             GlobalState.GAME_STATE = GameStatus.GAME_FAILED
         if self.doughCollected == 5:
-            self.nextLevel()
+            self.finishLevel()
 
         VisualizationService.draw_watering_bg()
         if len(sprites) == 0:
@@ -194,17 +196,18 @@ class Game:
 
     def nextLevel(self):
         global time, sprites, spritesSecondary, spritesThird
-        self.bg = None
-        time = 0
-        sprites.empty()
-        spritesSecondary.empty()
-        spritesThird.empty()
-        self.level += 0.5
-        self.last_succeed = False
-        if not self.level % 1 == 0:
-            GlobalState.TIMER.pauseTimer()
-        else:
-            GlobalState.TIMER.continueTimer()
+        if self.level <= self.last_level_completed:
+            self.bg = None
+            time = 0
+            sprites.empty()
+            spritesSecondary.empty()
+            spritesThird.empty()
+            self.level += 0.5
+            self.last_succeed = False
+            if not self.level % 1 == 0:
+                GlobalState.TIMER.pauseTimer()
+            else:
+                GlobalState.TIMER.continueTimer()
 
     def reset(self):
         if self.level != 0:
