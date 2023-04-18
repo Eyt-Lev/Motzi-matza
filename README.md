@@ -6,3 +6,8 @@ A game made in pygame about The Passover holiday.
 in this game you need to go through a serious of levels to make a Matzah. You need to pass all of the levels in time before it becomes Hametz. The game is based over the Jewish Passover holiday.
 
 ### Levels
+- Harvest
+- Crash
+- Water
+- Roll
+- Bake
