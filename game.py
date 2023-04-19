@@ -32,7 +32,7 @@ mixer = None
 class Game:
 
     def __init__(self):
-        self.level = 0
+        self.level = 3
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -147,11 +147,12 @@ class Game:
             for sprite in spritesThird:
                 sprite.handle_event(event)
 
+        if self.doughCollected == 5:
+            self.finishLevel()
+            return
         if self.water_flours_added == 8:
             self.deathMsg = Reasons.flourBoxesOver
             GlobalState.GAME_STATE = GameStatus.GAME_FAILED
-        if self.doughCollected == 5:
-            self.finishLevel()
 
         VisualizationService.draw_watering_bg()
         if len(sprites) == 0:

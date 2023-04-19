@@ -6,7 +6,7 @@ from src.services.timer_service import TimerService
 
 
 class GlobalState:
-    GAME_STATE = GameStatus.GAMEPLAY
+    GAME_STATE = GameStatus.MAIN_MENU
     SCREEN = None
 
     GAME = None
