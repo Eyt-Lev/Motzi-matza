@@ -32,7 +32,7 @@ mixer = None
 class Game:
 
     def __init__(self):
-        self.level = 3
+        self.level = 0
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -41,7 +41,7 @@ class Game:
         self.water_flours_added = 1
         self.doughCollected = 0
         self.deathMsg = None
-        self.last_level_completed = 0.5
+        self.last_level_completed = self.level + 0.5
 
     def finishLevel(self):
         self.last_level_completed += 1
@@ -211,14 +211,14 @@ class Game:
                 GlobalState.TIMER.continueTimer()
 
     def reset(self):
-        if self.level != 0:
+        if self.level != 0.5:
             global time, sprites, spritesSecondary, spritesThird
             MusicService.play_end_sound()
             time = 0
             sprites.empty()
             spritesSecondary.empty()
             spritesThird.empty()
-            self.level = 0
+            self.level = 0.5
             self.crash_wheat_added = 0
             self.wheatsCollected = 0
             self.flourCollected = 0
@@ -231,4 +231,6 @@ class Game:
     @staticmethod
     def start():
         GlobalState.GAME = Game()
+        GlobalState.GAME.level = 0.5
+        GlobalState.GAME.last_level_completed += 0.5
         GlobalState.GAME_STATE = GameStatus.GAMEPLAY

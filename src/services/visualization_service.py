@@ -9,6 +9,8 @@ from src.services.music_service import MusicService
 from src.tools import sine, is_close_app_event
 from config import Config
 
+en = False
+
 
 class VisualizationService:
     GlobalState.load_main_screen()
@@ -306,7 +308,11 @@ class VisualizationService:
 
     @staticmethod
     def get_explains(level):
-        return pygame.image.load(EXPLAIN_DIR / f"ex{level}.png").convert_alpha()
+        global en
+        if en:
+            return pygame.image.load(EXPLAIN_DIR / f"ex{level}.png").convert_alpha()
+        else:
+            return pygame.image.load(EXPLAIN_DIR / f"אק{level}.png").convert_alpha()
 
     @staticmethod
     def get_flour_box_img():

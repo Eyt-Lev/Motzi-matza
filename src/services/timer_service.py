@@ -25,7 +25,7 @@ class TimerService:
 
     def update(self):
         if self.ticking:
-            self.time += 1
+            self.time += 0.75
 
     def showTime(self, screen):
         if self.ticking:
