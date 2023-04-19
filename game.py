@@ -37,7 +37,7 @@ DOUGH_TO_COLLECT_ON_WATERING = 5
 class Game:
 
     def __init__(self):
-        self.level = 3
+        self.level = 0
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
