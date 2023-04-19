@@ -1,4 +1,3 @@
-import random
 import pygame
 
 from paths import AUDIO_DIR
@@ -7,28 +6,6 @@ enabled = True
 
 
 class MusicService:
-    @staticmethod
-    def get_background_musics():
-        return [
-            AUDIO_DIR / "backgrond_music.MP3",
-        ]
-
-    @staticmethod
-    def get_chop_musics():
-        return [
-            AUDIO_DIR / "chop.wav",
-            AUDIO_DIR / "chop_2.wav",
-            AUDIO_DIR / "chop_3.wav"
-        ]
-
-    @staticmethod
-    def get_cheer_musics():
-        return [
-            AUDIO_DIR / "cheer.wav",
-            AUDIO_DIR / "cheer_2.wav",
-            AUDIO_DIR / "cheer_3.wav",
-            AUDIO_DIR / "cheer_4.wav"
-        ]
 
     @staticmethod
     def start_background_music():
@@ -37,8 +14,7 @@ class MusicService:
                 if pygame.mixer.music.get_busy():
                     return
 
-                musics = MusicService.get_background_musics()
-                filename = random.choice(musics)
+                filename = MusicService.get_background_music()
                 pygame.mixer.music.load(filename)
                 pygame.mixer.music.set_volume(0.1)
                 pygame.mixer.music.play(-1)
@@ -107,3 +83,7 @@ class MusicService:
                 pygame.mixer.Sound.play(sfx)
             except pygame.error:
                 pass
+
+    @staticmethod
+    def get_background_music():
+        return AUDIO_DIR / "backgrond_music.MP3"

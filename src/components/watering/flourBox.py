@@ -1,10 +1,10 @@
 import random
+
 import pygame
 
-
 from src.global_state import GlobalState
-from src.services.visualization_service import VisualizationService
 from src.services.music_service import MusicService
+from src.services.visualization_service import VisualizationService
 
 
 class WaterFlourBox(pygame.sprite.Sprite):
@@ -15,6 +15,7 @@ class WaterFlourBox(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x, self.y = (0, 119)
         self.rect.left, self.rect.top = self.x, self.y
+
         self.acc = random.randint(0, 33)
 
     def draw(self):

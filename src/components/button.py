@@ -29,7 +29,8 @@ class Button:
             else:
                 self.imgRect.left, self.imgRect.top = x, y
 
-            self.hoverd = self.imgRect.collidepoint(*pygame.mouse.get_pos()) and pygame.mask.from_surface(img).get_at((pygame.mouse.get_pos()[0] - self.imgRect.x, pygame.mouse.get_pos()[1] - self.imgRect.y))
+            self.hovered = self.imgRect.collidepoint(*pygame.mouse.get_pos()) and pygame.mask.from_surface(img).get_at(
+                (pygame.mouse.get_pos()[0] - self.imgRect.x, pygame.mouse.get_pos()[1] - self.imgRect.y))
             if hoverImage is not None:
                 self.hoverImage = hoverImage
         else:
@@ -38,13 +39,13 @@ class Button:
             self.buttonRect = pygame.Rect(x - width / 2, y - height / 2, width, height)
             self.buttonRect.center = (x, y)
             self.color = color
-            self.hoverd = self.buttonRect.collidepoint(pygame.mouse.get_pos())
+            self.hovered = self.buttonRect.collidepoint(pygame.mouse.get_pos())
             self.font = font
             self.textColor = textColor
             self.buttonText = buttonText
             self.border = border
 
-        self.alreadyPressed = self.hoverd and pygame.mouse.get_pressed()[0]
+        self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
 
     def handleEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # left mouse button
@@ -63,24 +64,24 @@ class Button:
             pos = pygame.mouse.get_pos()
             if self.isImg:
                 if is_img_mask_collide_with_mouse(self.img, self.imgRect):
-                    if not self.hoverd:
+                    if not self.hovered:
                         if self.onHoverFunction is not None:
                             self.onHoverFunction()
-                    self.hoverd = True
+                    self.hovered = True
                 else:
-                    self.hoverd = False
+                    self.hovered = False
             else:
                 if self.buttonRect.collidepoint(pos):
-                    if not self.hoverd:
+                    if not self.hovered:
                         if self.onHoverFunction is not None:
                             self.onHoverFunction()
-                    self.hoverd = True
+                    self.hovered = True
                 else:
-                    self.hoverd = False
+                    self.hovered = False
 
     def draw(self):
         if self.isImg:
-            if self.hoverd:
+            if self.hovered:
                 img = self.hoverImage
             else:
                 img = self.img

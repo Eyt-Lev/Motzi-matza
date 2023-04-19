@@ -1,9 +1,4 @@
-import pygame
-
 from src.services.visualization_service import VisualizationService
-from src.tools import is_close_app_event
-from src.global_state import GlobalState
-from src.game_status import GameStatus
 
 
 class Reasons:

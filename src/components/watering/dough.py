@@ -1,9 +1,9 @@
 import pygame
 
 from src.global_state import GlobalState
+from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 from src.tools import is_img_mask_collide_with_mouse
-from src.services.music_service import MusicService
 
 
 class Dough(pygame.sprite.Sprite):
@@ -51,6 +51,7 @@ class Dough(pygame.sprite.Sprite):
             MusicService.play_fail_sound()
 
     def draw(self):
+        # Adding to the time
         self.uglyTime += 0.25
         if self.uglyTime % 1 == 0:
             self.time += 1
@@ -72,12 +73,18 @@ class Dough(pygame.sprite.Sprite):
                 (self.rect.width + 15) / 10 * self.time,
                 25
             )
-            GlobalState.SCREEN.blit(self.image, self.rect)
+            # Drawing
+            GlobalState.SCREEN.blit(
+                self.image,
+                self.rect
+            )
+            # Drawing inner time rect
             pygame.draw.rect(
                 GlobalState.SCREEN,
                 color,
                 self.pressRect,
             )
+            # Drawing outer time rect
             pygame.draw.rect(
                 GlobalState.SCREEN,
                 (96, 96, 96),

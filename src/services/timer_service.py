@@ -1,6 +1,7 @@
+import datetime
+
 import pygame
 import pygame.freetype
-import datetime
 
 from paths import IMAGES_DIR, FONT_DIR
 
@@ -14,18 +15,8 @@ class TimerService:
         self.time = 0
         self.fixedTime = ""
 
-    def startTimer(self):
-        self.time = 0
-
-    def continueTimer(self):
-        self.ticking = True
-
-    def pauseTimer(self):
-        self.ticking = False
-
     def update(self):
-        if self.ticking:
-            self.time += 0.75
+        self.time += 0.75
 
     def showTime(self, screen):
         if self.ticking:
@@ -42,7 +33,7 @@ class TimerService:
                 (0, 0, 0), None, size=80
             )
 
-    def reset(self):
+    def resetTimer(self):
         self.ticking = False
         self.time = 0
         self.fixedTime = ""

@@ -1,13 +1,13 @@
 import pygame
 import pygame.freetype
 
+from config import Config
 from paths import IMAGES_DIR, FONT_DIR, EXPLAIN_DIR
 from src.components.button import Button
 from src.game_status import GameStatus
 from src.global_state import GlobalState
 from src.services.music_service import MusicService
 from src.tools import sine, is_close_app_event
-from config import Config
 
 en = False
 
@@ -16,12 +16,6 @@ class VisualizationService:
     GlobalState.load_main_screen()
 
     # Main menu
-    @staticmethod
-    def load_main_game_displays():
-        pygame.display.set_caption("Motzi Matza")
-        # title = VisualizationService.get_player_image()
-        # pygame.display.set_icon(title)
-
     @staticmethod
     def draw_main_menu_background(screen):
         title = VisualizationService.get_main_menu_background()
@@ -179,7 +173,7 @@ class VisualizationService:
             GlobalState.SCREEN,
             0, 0, img=img, hoverImage=hovered_img,
             center=False, onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=GlobalState.GAME.start
+            onclickFunction=GlobalState.GAME.retry
         )
         img, hovered_img = VisualizationService.get_home_btn_images()
         home = Button(
@@ -287,10 +281,6 @@ class VisualizationService:
     @staticmethod
     def get_explain_box_btn_hovered():
         return pygame.image.load(EXPLAIN_DIR / "next btn hovered.png").convert_alpha()
-
-    @staticmethod
-    def get_font():
-        return pygame.freetype.Font(FONT_DIR / "HEEBO-BLACK.ttf", 20)
 
     @staticmethod
     def get_mc_font():
