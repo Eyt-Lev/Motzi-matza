@@ -2,6 +2,7 @@ import pygame
 
 from config import Config
 from src.game_status import GameStatus
+from src.services.music_service import MusicService
 from src.services.timer_service import TimerService
 
 
@@ -10,6 +11,7 @@ class GlobalState:
     SCREEN = None
     GAME = None
     TIMER = TimerService()
+    music = MusicService()
 
     @staticmethod
     def load_main_screen():

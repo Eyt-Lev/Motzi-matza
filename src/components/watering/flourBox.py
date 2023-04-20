@@ -3,7 +3,6 @@ import random
 import pygame
 
 from src.global_state import GlobalState
-from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 
 
@@ -23,7 +22,7 @@ class WaterFlourBox(pygame.sprite.Sprite):
         if self.y >= 750:   # Touching the floor
             self.kill()
             GlobalState.GAME.water_flours_added += 1
-            MusicService.play_fail_sound()
+            GlobalState.music.play_fail_sound()
         elif self.x >= 530:    # In the air
             self.y += 20
             self.x += self.acc

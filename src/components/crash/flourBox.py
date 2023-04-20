@@ -1,7 +1,6 @@
 import pygame
 
 from src.global_state import GlobalState
-from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 from src.tools import is_img_mask_collide_with_mouse
 
@@ -27,7 +26,7 @@ class FlourBox(pygame.sprite.Sprite):
         self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
 
     def on_flour_collection(self):
-        MusicService.play_flour_pick_up_sound()
+        GlobalState.music.play_flour_pick_up_sound()
         GlobalState.GAME.flourCollected += 1
         self.kill()
         GlobalState.GAME.last_succeed = False
@@ -37,7 +36,7 @@ class FlourBox(pygame.sprite.Sprite):
         self.x += 28
         self.rect.left, self.rect.top = self.x, self.y
         if self.rect.right >= 1920:  # if it goes off-screen
-            MusicService.play_fail_sound()
+            GlobalState.music.play_fail_sound()
             self.kill()
             GlobalState.GAME.last_succeed = False
 

@@ -1,7 +1,6 @@
 import pygame
 
 from src.global_state import GlobalState
-from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 
 
@@ -60,7 +59,7 @@ class CrashWheat(pygame.sprite.Sprite):
 
     def on_success(self):
         self.kill()
-        MusicService.play_success_sound()
+        GlobalState.music.play_success_sound()
         GlobalState.GAME.send_flour()
         GlobalState.GAME.crash_wheat_added += 1
         if GlobalState.GAME.crash_wheat_added == self.wheat_to_end_harvest:
@@ -70,6 +69,6 @@ class CrashWheat(pygame.sprite.Sprite):
 
     def on_fail(self):
         self.kill()
-        MusicService.play_fail_sound()
+        GlobalState.music.play_fail_sound()
         GlobalState.GAME.add_crash_wheat()
         GlobalState.GAME.crash_wheat_added += 1

@@ -11,7 +11,6 @@ from src.components.watering.flourBox import WaterFlourBox
 from src.components.watering.mixer import Mixer
 from src.game_status import GameStatus
 from src.global_state import GlobalState
-from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 from src.tools import is_close_app_event
 
@@ -28,7 +27,7 @@ wheat_positions = [
     (1800, 348),
 ]
 mixer = None
-INTERVAL_BETWEEN_WHEAT_SPAWNS = 15
+INTERVAL_BETWEEN_WHEAT_SPAWNS = 19
 WHEAT_TO_END_HARVEST = 9
 FLOURS_TO_COLLECT_ON_CRASH = 7
 DOUGH_TO_COLLECT_ON_WATERING = 5
@@ -37,7 +36,7 @@ DOUGH_TO_COLLECT_ON_WATERING = 5
 class Game:
 
     def __init__(self):
-        self.level = 3
+        self.level = 1.5
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -111,7 +110,7 @@ class Game:
                     wheat_to_end_harvest=WHEAT_TO_END_HARVEST
                 )
             )
-            MusicService.play_wheat_grow_sound()
+            GlobalState.music.play_wheat_grow_sound()
             time = 0
 
     @staticmethod
@@ -165,7 +164,7 @@ class Game:
             self.add_crash_wheat()
         # Score
         VisualizationService.draw_wheat_score(
-            wheats=self.crash_wheat_added, y=150
+            wheats=9 - self.crash_wheat_added, y=150
         )
 
     def play_watering(self):
@@ -248,7 +247,7 @@ class Game:
     def reset(self):
         if self.level != 0.5:
             global time, sprites, spritesSecondary, spritesThird
-            MusicService.play_end_sound()
+            GlobalState.music.play_end_sound()
             time = 0
             sprites.empty()
             spritesSecondary.empty()

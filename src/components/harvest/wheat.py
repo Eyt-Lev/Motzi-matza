@@ -1,7 +1,6 @@
 import pygame
 
 from src.global_state import GlobalState
-from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 from src.tools import is_img_mask_collide_with_mouse
 
@@ -25,7 +24,7 @@ class Wheat(pygame.sprite.Sprite):
                     self.on_wheat_collection()
 
     def on_wheat_collection(self):
-        MusicService.play_wheat_break_sound()
+        GlobalState.music.play_wheat_break_sound()
         self.kill()
         GlobalState.GAME.wheatsCollected += 1
         if GlobalState.GAME.wheatsCollected == self.wheat_to_end_harvest:

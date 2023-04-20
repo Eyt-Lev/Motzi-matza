@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 
 from src.global_state import GlobalState
-from src.services.music_service import MusicService
 from src.services.visualization_service import VisualizationService
 
 vec = pygame.math.Vector2
@@ -30,7 +29,7 @@ class Mixer(pygame.sprite.Sprite):
         for sprite in group:
             if pygame.sprite.collide_mask(self, sprite):
                 sprite.kill()
-                MusicService.play_success_sound()
+                GlobalState.music.play_success_sound()
                 return True
 
     def draw(self):
