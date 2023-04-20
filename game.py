@@ -27,7 +27,7 @@ wheat_positions = [
     (1800, 348),
 ]
 mixer = None
-INTERVAL_BETWEEN_WHEAT_SPAWNS = 19
+INTERVAL_BETWEEN_WHEAT_SPAWNS = 15
 WHEAT_TO_END_HARVEST = 9
 FLOURS_TO_COLLECT_ON_CRASH = 7
 DOUGH_TO_COLLECT_ON_WATERING = 5
@@ -36,7 +36,7 @@ DOUGH_TO_COLLECT_ON_WATERING = 5
 class Game:
 
     def __init__(self):
-        self.level = 1.5
+        self.level = 0
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
