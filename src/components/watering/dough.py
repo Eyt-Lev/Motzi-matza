@@ -15,8 +15,7 @@ class Dough(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x, self.y = position
         self.rect.centerx, self.rect.top = position
-        self.hovered = self.rect.collidepoint(pygame.mouse.get_pos())
-        self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
+        self.alreadyPressed = False
         self.timeRect = pygame.Rect(
             self.rect.left - 10,
             self.rect.top - 12,
@@ -31,14 +30,12 @@ class Dough(pygame.sprite.Sprite):
             25
         )
 
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+    def handle_event(self):
+        if pygame.mouse.get_pressed()[0]:
             if not self.alreadyPressed:
                 if is_img_mask_collide_with_mouse(self.image, self.rect):
+                    self.alreadyPressed = True
                     self.onPress()
-
-    def setPressed(self):
-        self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
 
     def onPress(self):
         self.kill()
@@ -50,6 +47,7 @@ class Dough(pygame.sprite.Sprite):
             GlobalState.music.play_fail_sound()
 
     def draw(self):
+        self.handle_event()
         # Adding to the time
         self.uglyTime += 0.25
         if self.uglyTime % 1 == 0:

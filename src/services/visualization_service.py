@@ -6,9 +6,13 @@ from paths import IMAGES_DIR, FONT_DIR, EXPLAIN_DIR
 from src.components.button import Button
 from src.game_status import GameStatus
 from src.global_state import GlobalState
-from src.tools import sine, is_close_app_event
+from src.tools import sine
 
 en = False
+
+
+def goHome():
+    GlobalState.GAME_STATE = GameStatus.MAIN_MENU
 
 
 def change_lang():
@@ -27,67 +31,31 @@ def change_sound():
 class VisualizationService:
     GlobalState.load_main_screen()
 
-    # Main menu
     @staticmethod
-    def draw_main_menu_background(screen):
+    def draw_main_menu(screen, onClick):
+        screen.fill((255, 255, 255))
+        # Background
         title = VisualizationService.get_main_menu_background()
         rect = title.get_rect()
         rect.top, rect.left = (0, 0)
         screen.blit(title, rect)
-
-    @staticmethod
-    def draw_moving_logo(screen):
+        # Moving logo
         logo = VisualizationService.get_logo()
         y = sine(200.0, 12680, 10.0, 70)
         screen.blit(logo, (530, y))
+        # Buttons
+        mainMenuStartBtn.onclickFunction = onClick
 
-    @staticmethod
-    def draw_main_menu_btns(onClick):
-        start = Button(
-            GlobalState.SCREEN, x=977, y=580,
-            img=VisualizationService.get_main_menu_start_btn(),
-            hoverImage=VisualizationService.get_main_menu_start_btn_hovered(),
-            onclickFunction=onClick,
-            onHoverFunction=VisualizationService.on_btns_hover
-        )
-        langImg, langImgHover = VisualizationService.get_lang_image()
-        lang = Button(
-            GlobalState.SCREEN, x=30, y=870,
-            img=langImg, hoverImage=langImgHover,
-            center=False, onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=change_lang
-        )
-        musicImg, musicImgHovered = VisualizationService.get_music_btn_image()
-        music = Button(
-            GlobalState.SCREEN, x=220, y=870,
-            img=musicImg, hoverImage=musicImgHovered,
-            center=False, onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=change_music
-        )
+        mainMenuLangBtn.img, mainMenuLangBtn.hoverImage = VisualizationService.get_lang_image()
+        mainMenuMusicBtn.img, mainMenuMusicBtn.hoverImage = VisualizationService.get_music_btn_image()
+        mainMenuNoteBtn.img, mainMenuNoteBtn.hoverImage = VisualizationService.get_note_btn_image()
 
-        noteImg, noteImgHovered = VisualizationService.get_note_btn_image()
-        note = Button(
-            GlobalState.SCREEN, x=380, y=870,
-            img=noteImg, hoverImage=noteImgHovered,
-            center=False, onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=change_sound
-        )
-        btns = [start, lang, music, note]
-        for event in pygame.event.get():
-            if is_close_app_event(event):
-                GlobalState.GAME_STATE = GameStatus.GAME_END
-            for btn in btns:
-                btn.handleEvent(event)
+        btns = [mainMenuStartBtn, mainMenuLangBtn, mainMenuMusicBtn, mainMenuNoteBtn]
 
         for btn in btns:
+            if btn is not mainMenuStartBtn:
+                btn.originalImg = btn.img
             btn.draw()
-
-    @staticmethod
-    def draw_main_menu(screen, onClick):
-        screen.fill((255, 255, 255))
-        VisualizationService.draw_main_menu_background(screen)
-        VisualizationService.draw_moving_logo(screen)
-        VisualizationService.draw_main_menu_btns(onClick)
 
     @staticmethod
     def draw_explain_box(level):
@@ -101,19 +69,8 @@ class VisualizationService:
 
     @staticmethod
     def draw_explain_box_btn():
-        btn = Button(
-            x=960, y=541, screen=GlobalState.SCREEN,
-            img=VisualizationService.get_explain_box_btn(),
-            hoverImage=VisualizationService.get_explain_box_btn_hovered(),
-            onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=GlobalState.GAME.nextLevel,
-            onePress=True
-        )
-        for event in pygame.event.get():
-            if is_close_app_event(event):
-                GlobalState.GAME_STATE = GameStatus.GAME_END
-            btn.handleEvent(event)
-        btn.draw()
+        explainBoxNextBtn.onclickFunction = GlobalState.GAME.nextLevel
+        explainBoxNextBtn.draw()
 
     @staticmethod
     def draw_explain_bg(bg):
@@ -202,30 +159,9 @@ class VisualizationService:
 
     @staticmethod
     def draw_end_screen_btn():
-        def goHome():
-            GlobalState.GAME_STATE = GameStatus.MAIN_MENU
-
-        img, hovered_img = VisualizationService.get_end_btn_images()
-        btn = Button(
-            GlobalState.SCREEN,
-            0, 0, img=img, hoverImage=hovered_img,
-            center=False, onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=GlobalState.GAME.retry
-        )
-        img, hovered_img = VisualizationService.get_home_btn_images()
-        home = Button(
-            GlobalState.SCREEN, 0, 0, img=img, hoverImage=hovered_img,
-            center=False, onHoverFunction=VisualizationService.on_btns_hover,
-            onclickFunction=goHome
-        )
-
-        for event in pygame.event.get():
-            if is_close_app_event(event):
-                GlobalState.GAME_STATE = GameStatus.GAME_END
-            btn.handleEvent(event)
-            home.handleEvent(event)
-        btn.draw()
-        home.draw()
+        endScreenRetryBtn.onclickFunction = GlobalState.GAME.retry
+        endScreenRetryBtn.draw()
+        endScreenHomeBtn.draw()
 
     @staticmethod
     def draw_end_screen_reason(screen, reason):
@@ -409,3 +345,57 @@ class VisualizationService:
                 pygame.image.load(IMAGES_DIR / "note_btn_disabled.png").convert_alpha(),
                 pygame.image.load(IMAGES_DIR / "note_btn_disabled_hovered.png").convert_alpha(),
             ]
+
+
+mainMenuStartBtn = Button(
+    GlobalState.SCREEN, x=977, y=580,
+    img=VisualizationService.get_main_menu_start_btn(),
+    hoverImage=VisualizationService.get_main_menu_start_btn_hovered(),
+    onHoverFunction=VisualizationService.on_btns_hover
+)
+
+langImg, langImgHover = VisualizationService.get_lang_image()
+mainMenuLangBtn = Button(
+    GlobalState.SCREEN, x=30, y=870,
+    img=langImg, hoverImage=langImgHover,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=change_lang
+)
+
+musicImg, musicImgHovered = VisualizationService.get_music_btn_image()
+mainMenuMusicBtn = Button(
+    GlobalState.SCREEN, x=220, y=870,
+    img=musicImg, hoverImage=musicImgHovered,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=change_music
+)
+
+noteImg, noteImgHovered = VisualizationService.get_note_btn_image()
+mainMenuNoteBtn = Button(
+    GlobalState.SCREEN, x=380, y=870,
+    img=noteImg, hoverImage=noteImgHovered,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=change_sound
+)
+
+explainBoxNextBtn = Button(
+    x=960, y=541, screen=GlobalState.SCREEN,
+    img=VisualizationService.get_explain_box_btn(),
+    hoverImage=VisualizationService.get_explain_box_btn_hovered(),
+    onHoverFunction=VisualizationService.on_btns_hover,
+    onePress=True
+)
+
+img, hovered_img = VisualizationService.get_end_btn_images()
+endScreenRetryBtn = Button(
+    GlobalState.SCREEN,
+    0, 0, img=img, hoverImage=hovered_img,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+)
+img, hovered_img = VisualizationService.get_home_btn_images()
+
+endScreenHomeBtn = Button(
+    GlobalState.SCREEN, 0, 0, img=img, hoverImage=hovered_img,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=goHome
+)

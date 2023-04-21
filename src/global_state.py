@@ -1,6 +1,7 @@
 import pygame
 
 from config import Config
+from paths import IMAGES_DIR
 from src.game_status import GameStatus
 from src.services.music_service import MusicService
 from src.services.timer_service import TimerService
@@ -15,6 +16,7 @@ class GlobalState:
 
     @staticmethod
     def load_main_screen():
+        pygame.display.set_icon(pygame.image.load(IMAGES_DIR / "mini_logo.png"))
         screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT))
         screen.fill((0, 255, 255))
         GlobalState.SCREEN = screen

@@ -13,17 +13,14 @@ class FlourBox(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x, self.y = position
         self.rect.left, self.rect.top = self.x, self.y
-        self.hovered = self.rect.collidepoint(pygame.mouse.get_pos())
-        self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
+        self.alreadyPressed = False
 
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+    def handle_event(self):
+        if pygame.mouse.get_pressed()[0]:
             if not self.alreadyPressed:
                 if is_img_mask_collide_with_mouse(self.image, self.rect):
+                    self.alreadyPressed = True
                     self.on_flour_collection()
-
-    def setPressed(self):
-        self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
 
     def on_flour_collection(self):
         GlobalState.music.play_flour_pick_up_sound()
@@ -32,7 +29,7 @@ class FlourBox(pygame.sprite.Sprite):
         GlobalState.GAME.last_succeed = False
 
     def draw(self):
-        self.setPressed()
+        self.handle_event()
         self.x += 28
         self.rect.left, self.rect.top = self.x, self.y
         if self.rect.right >= 1920:  # if it goes off-screen

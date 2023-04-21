@@ -4,6 +4,7 @@ from config import Config
 from src.game_phases import main_menu_phase, exit_game_phase, gameplay_phase, failed_phase
 from src.game_status import GameStatus
 from src.global_state import GlobalState
+from src.tools import is_close_app_event
 
 pygame.init()
 FramePerSec = pygame.time.Clock()
@@ -24,6 +25,9 @@ state_functions = {
 
 def main():
     while True:
+        for event in pygame.event.get():
+            if is_close_app_event(event):
+                GlobalState.GAME_STATE = GameStatus.GAME_END
         state_functions[GlobalState.GAME_STATE]()
         update_game_display()
         GlobalState.music.start_background_music()

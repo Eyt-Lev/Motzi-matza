@@ -24,13 +24,11 @@ class Button:
             self.img = img
             self.imgRect = img.get_rect()
             self.center = center
+            self.originalImg = img
             if self.center:
                 self.imgRect.center = x, y
             else:
                 self.imgRect.left, self.imgRect.top = x, y
-
-            self.hovered = self.imgRect.collidepoint(*pygame.mouse.get_pos()) and pygame.mask.from_surface(img).get_at(
-                (pygame.mouse.get_pos()[0] - self.imgRect.x, pygame.mouse.get_pos()[1] - self.imgRect.y))
             if hoverImage is not None:
                 self.hoverImage = hoverImage
         else:
@@ -39,53 +37,61 @@ class Button:
             self.buttonRect = pygame.Rect(x - width / 2, y - height / 2, width, height)
             self.buttonRect.center = (x, y)
             self.color = color
-            self.hovered = self.buttonRect.collidepoint(pygame.mouse.get_pos())
             self.font = font
             self.textColor = textColor
             self.buttonText = buttonText
             self.border = border
 
-        self.alreadyPressed = self.hovered and pygame.mouse.get_pressed()[0]
+        self.hovered = False
+        self.alreadyPressed = False
 
-    def handleEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # left mouse button
-            if not self.alreadyPressed:
-                mouse_pos = pygame.mouse.get_pos()
-                if self.isImg:
-                    if is_img_mask_collide_with_mouse(self.img, self.imgRect):
-                        if self.onclickFunction is not None:
-                            self.onclickFunction()
-                else:
-                    if self.buttonRect.collidepoint(mouse_pos):
-                        if self.onclickFunction is not None:
-                            self.onclickFunction()
+    def handleEvent(self):
+        pos = pygame.mouse.get_pos()
+        if self.checkForClicks(pos):
+            if self.onclickFunction is not None:
+                self.onclickFunction()
+        if self.checkForHover(pos):
+            if self.onHoverFunction is not None:
+                self.onHoverFunction()
 
-        elif event.type == pygame.MOUSEMOTION:  # on hover
-            pos = pygame.mouse.get_pos()
+    def checkForClicks(self, mousePos):
+        if not self.alreadyPressed:
             if self.isImg:
-                if is_img_mask_collide_with_mouse(self.img, self.imgRect):
-                    if not self.hovered:
-                        if self.onHoverFunction is not None:
-                            self.onHoverFunction()
-                    self.hovered = True
-                else:
-                    self.hovered = False
+                if is_img_mask_collide_with_mouse(self.img, self.imgRect) and pygame.mouse.get_pressed()[0]:
+                    self.alreadyPressed = True
+                    return True
             else:
-                if self.buttonRect.collidepoint(pos):
-                    if not self.hovered:
-                        if self.onHoverFunction is not None:
-                            self.onHoverFunction()
+                if self.buttonRect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0]:
+                    self.alreadyPressed = True
+                    return True
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.alreadyPressed = False
+
+    def checkForHover(self, mousePos):
+        if self.isImg:
+            hoveredNow = is_img_mask_collide_with_mouse(self.img, self.imgRect)
+            if hoveredNow:
+                self.img = self.hoverImage
+                if not self.hovered:
                     self.hovered = True
-                else:
-                    self.hovered = False
+                    return True
+            else:
+                self.img = self.originalImg
+                self.hovered = False
+
+        elif not self.isImg:
+            hoveredNow = self.buttonRect.collidepoint(mousePos)
+            if hoveredNow:
+                if not self.hovered:
+                    self.hovered = True
+                    return True
+            else:
+                self.hovered = False
 
     def draw(self):
+        self.handleEvent()
         if self.isImg:
-            if self.hovered:
-                img = self.hoverImage
-            else:
-                img = self.img
-            self.screen.blit(img, self.imgRect)
+            self.screen.blit(self.img, self.imgRect)
         else:
             pygame.draw.rect(self.screen, self.color, self.buttonRect, self.border)
             if self.font is not None:

@@ -12,7 +12,6 @@ from src.components.watering.mixer import Mixer
 from src.game_status import GameStatus
 from src.global_state import GlobalState
 from src.services.visualization_service import VisualizationService
-from src.tools import is_close_app_event
 
 sprites = pygame.sprite.Group()
 spritesSecondary = pygame.sprite.Group()
@@ -83,12 +82,6 @@ class Game:
         global sprites, time, wheat_positions
         time += 1
 
-        for event in pygame.event.get():
-            if is_close_app_event(event):
-                GlobalState.GAME_STATE = GameStatus.GAME_END
-            for wheat in sprites:
-                wheat.handle_event(event)
-
         # drawing
         VisualizationService.draw_harvest_level(
             GlobalState.SCREEN
@@ -128,14 +121,6 @@ class Game:
         sprites.add(FlourBox((1286, 693)))
 
     def play_crash(self):
-        for event in pygame.event.get():
-            if is_close_app_event(event):
-                GlobalState.GAME_STATE = GameStatus.GAME_END
-            for flour in sprites:
-                flour.handle_event(event)
-            for wheat in spritesSecondary:
-                wheat.handle_event(event)
-
         # drawing
         VisualizationService.draw_crash_level(
             GlobalState.SCREEN
@@ -169,11 +154,6 @@ class Game:
 
     def play_watering(self):
         global time, mixer
-        for event in pygame.event.get():
-            if is_close_app_event(event):
-                GlobalState.GAME_STATE = GameStatus.GAME_END
-            for sprite in spritesThird:
-                sprite.handle_event(event)
 
         # Check if next level
         if self.doughCollected == DOUGH_TO_COLLECT_ON_WATERING:

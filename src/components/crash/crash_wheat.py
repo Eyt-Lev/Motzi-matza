@@ -18,8 +18,9 @@ class CrashWheat(pygame.sprite.Sprite):
         self.moverToSide = True
         self.wheat_to_end_harvest = wheat_to_end_harvest
 
-    def handle_event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+    def handle_event(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
             if not self.alreadyPressed and self.y == 30:
                 self.goDown()
 
@@ -38,6 +39,7 @@ class CrashWheat(pygame.sprite.Sprite):
             self.gotoRight = True
 
     def draw(self):
+        self.handle_event()
         # Drawing
         self.decideDirection()
         if self.moverToSide:  # If not dropped
