@@ -60,7 +60,8 @@ class MusicService:
         if self.soundEnabled:
             try:
                 sfx = pygame.mixer.Sound(AUDIO_DIR / "wheat_grow.mp3")
-                pygame.mixer.Sound.play(sfx)
+                pygame.mixer.Channel(1).set_volume(0.5)
+                pygame.mixer.Channel(1).play(sfx)
             except pygame.error:
                 pass
 

@@ -43,10 +43,14 @@ class Game:
         self.last_succeed = False
         self.water_flours_added = 1
         self.doughCollected = 0
-        self.deathMsg = None
+        self.deathMsg = Reasons.ranOutOfTime
         self.last_level_completed = self.level + 0.5
+        self.pause = False
 
     def playLevel(self):
+        if self.pause:
+            self.pauseMenu()
+            return
         if self.level == 1:  # harvest
             self.play_harvest()
         elif self.level == 2:  # crash
@@ -60,13 +64,19 @@ class Game:
         else:  # explanation
             self.explain()
 
-        if self.level % 1 == 0:  # if playing (not explain)
+        if self.level != 0 and self.level % 1 == 0:  # if playing (not explain)
+            VisualizationService.draw_pause_btn()
             GlobalState.TIMER.update()
             GlobalState.TIMER.showTime(GlobalState.SCREEN)
             # check if timer is 18
             if GlobalState.TIMER.fixedTime == "18:00":
                 self.deathMsg = Reasons.ranOutOfTime
                 GlobalState.GAME_STATE = GameStatus.GAME_FAILED
+
+    def pauseMenu(self):
+        VisualizationService.draw_pos(
+            int(self.level)
+        )
 
     def explain(self):
         if self.bg is None:

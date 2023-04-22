@@ -89,7 +89,9 @@ class Button:
                 self.hovered = False
 
     def draw(self):
-        self.handleEvent()
+        if self.onclickFunction is not None or self.onHoverFunction is not None:
+            self.handleEvent()
+
         if self.isImg:
             self.screen.blit(self.img, self.imgRect)
         else:

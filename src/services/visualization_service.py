@@ -78,6 +78,31 @@ class VisualizationService:
         rect.top, rect.left = (0, 0)
         GlobalState.SCREEN.blit(bg, rect)
 
+    @staticmethod
+    def draw_pause_btn():
+        pauseBtn.draw()
+
+    @staticmethod
+    def draw_pos(level):
+        bg = pygame.image.load(VisualizationService.get_explain_backgrounds()[level])
+        GlobalState.SCREEN.blit(bg, bg.get_rect())
+        bg = VisualizationService.get_pause_bg()
+        GlobalState.SCREEN.blit(bg, bg.get_rect())
+        GlobalState.TIMER.showTime(GlobalState.SCREEN)
+
+        posMenuLangBtn.img, posMenuLangBtn.hoverImage = VisualizationService.get_lang_image()
+        posMenuMusicBtn.img, posMenuMusicBtn.hoverImage = VisualizationService.get_music_btn_image()
+        posMenuNoteBtn.img, posMenuNoteBtn.hoverImage = VisualizationService.get_note_btn_image()
+
+        btns = [continueBtn, pauseScreenHomeBtn]
+        controls = [posMenuLangBtn, posMenuMusicBtn, posMenuNoteBtn, ]
+
+        for btn in btns:
+            btn.draw()
+        for btn in controls:
+            btn.originalImg = btn.img
+            btn.draw()
+
     # harvest
     @staticmethod
     def draw_harvest_level(screen):
@@ -300,8 +325,19 @@ class VisualizationService:
         ]
 
     @staticmethod
+    def get_pause_btn_images():
+        return [
+            pygame.image.load(IMAGES_DIR / "pause_btn.png").convert_alpha(),
+            pygame.image.load(IMAGES_DIR / "pause_btn_hovered.png").convert_alpha()
+        ]
+
+    @staticmethod
     def get_dough_image():
         return pygame.image.load(IMAGES_DIR / "dough.png").convert_alpha()
+
+    @staticmethod
+    def get_pause_bg():
+        return pygame.image.load(IMAGES_DIR / "pause_bg.png").convert_alpha()
 
     @staticmethod
     def get_end_screen_image():
@@ -346,6 +382,13 @@ class VisualizationService:
                 pygame.image.load(IMAGES_DIR / "note_btn_disabled_hovered.png").convert_alpha(),
             ]
 
+    @staticmethod
+    def get_continue_btn_images():
+        return [
+            pygame.image.load(IMAGES_DIR / "continue_btn.png").convert_alpha(),
+            pygame.image.load(IMAGES_DIR / "continue_btn_hovered.png").convert_alpha(),
+        ]
+
 
 mainMenuStartBtn = Button(
     GlobalState.SCREEN, x=977, y=580,
@@ -378,6 +421,27 @@ mainMenuNoteBtn = Button(
     onclickFunction=change_sound
 )
 
+posMenuLangBtn = Button(
+    GlobalState.SCREEN, x=480, y=670,
+    img=langImg, hoverImage=langImgHover,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=change_lang
+)
+
+posMenuMusicBtn = Button(
+    GlobalState.SCREEN, x=670, y=670,
+    img=musicImg, hoverImage=musicImgHovered,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=change_music
+)
+
+posMenuNoteBtn = Button(
+    GlobalState.SCREEN, x=830, y=670,
+    img=noteImg, hoverImage=noteImgHovered,
+    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=change_sound
+)
+
 explainBoxNextBtn = Button(
     x=960, y=541, screen=GlobalState.SCREEN,
     img=VisualizationService.get_explain_box_btn(),
@@ -395,7 +459,38 @@ endScreenRetryBtn = Button(
 img, hovered_img = VisualizationService.get_home_btn_images()
 
 endScreenHomeBtn = Button(
-    GlobalState.SCREEN, 0, 0, img=img, hoverImage=hovered_img,
-    center=False, onHoverFunction=VisualizationService.on_btns_hover,
+    GlobalState.SCREEN, 130, 930, img=img, hoverImage=hovered_img,
+    onHoverFunction=VisualizationService.on_btns_hover,
     onclickFunction=goHome
+)
+
+pauseScreenHomeBtn = Button(
+    GlobalState.SCREEN, 1351, 776, img=img, hoverImage=hovered_img,
+    onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=goHome
+)
+
+
+def pauseGame():
+    GlobalState.GAME.pause = True
+
+
+def continue_game():
+    GlobalState.GAME.pause = False
+
+
+pauseBtnImg, pauseBtnImgHovered = VisualizationService.get_pause_btn_images()
+pauseBtn = Button(
+    GlobalState.SCREEN,
+    380, 73.4, img=pauseBtnImg, hoverImage=pauseBtnImgHovered,
+    onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=pauseGame
+)
+
+continueBtnImg, continueBtnImgHovered = VisualizationService.get_continue_btn_images()
+continueBtn = Button(
+    GlobalState.SCREEN,
+    566, 278, img=continueBtnImg, hoverImage=continueBtnImgHovered,
+    onHoverFunction=VisualizationService.on_btns_hover,
+    onclickFunction=continue_game
 )
