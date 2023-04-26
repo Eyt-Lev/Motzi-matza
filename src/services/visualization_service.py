@@ -164,6 +164,20 @@ class VisualizationService:
         )
 
     @staticmethod
+    def draw_matza_score(score, y=30):
+        VisualizationService.draw_score_background(y - 15)
+        dough = VisualizationService.get_matza_image(3)
+        rect = dough.get_rect()
+        rect.topright = (1900, y + 6)
+        GlobalState.SCREEN.blit(dough, rect)
+        font = VisualizationService.get_mc_font()
+        font.render_to(
+            GlobalState.SCREEN, (1750, y + 10),
+            str(score),
+            (0, 0, 0), None, size=80
+        )
+
+    @staticmethod
     def draw_crash_wheat_handler(x):
         handler = VisualizationService.get_crash_wheat_handler_image()
         rect = handler.get_rect()
@@ -173,6 +187,11 @@ class VisualizationService:
     @staticmethod
     def draw_watering_bg():
         bg = VisualizationService.get_watering_bg_image()
+        GlobalState.SCREEN.blit(bg, bg.get_rect())
+
+    @staticmethod
+    def draw_oven_bg():
+        bg = VisualizationService.get_oven_bg()
         GlobalState.SCREEN.blit(bg, bg.get_rect())
 
     @staticmethod
@@ -285,6 +304,10 @@ class VisualizationService:
         return pygame.freetype.Font(FONT_DIR / "Minecraft.ttf", 20)
 
     @staticmethod
+    def get_matza_image(type):
+        return pygame.image.load(IMAGES_DIR / f"matza_{type}.png").convert_alpha()
+
+    @staticmethod
     def get_explain_backgrounds():
         return [
             EXPLAIN_DIR / "bg1.png",
@@ -292,6 +315,7 @@ class VisualizationService:
             EXPLAIN_DIR / "bg3.png",
             EXPLAIN_DIR / "bg4.png",
             EXPLAIN_DIR / "bg5.png",
+            EXPLAIN_DIR / "bg7.png",
         ]
 
     @staticmethod
@@ -381,6 +405,10 @@ class VisualizationService:
                 pygame.image.load(IMAGES_DIR / "note_btn_disabled.png").convert_alpha(),
                 pygame.image.load(IMAGES_DIR / "note_btn_disabled_hovered.png").convert_alpha(),
             ]
+
+    @staticmethod
+    def get_oven_bg():
+        return pygame.image.load(IMAGES_DIR / "5th_level_bg.png").convert()
 
     @staticmethod
     def get_continue_btn_images():

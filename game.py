@@ -2,6 +2,7 @@ import random
 
 import pygame
 
+from src.components.Oven.matza import Matza
 from src.components.crash.crash_wheat import CrashWheat
 from src.components.crash.flourBox import FlourBox
 from src.components.endScreen import Reasons
@@ -26,7 +27,7 @@ wheat_positions = [
     (1800, 348),
 ]
 mixer = None
-INTERVAL_BETWEEN_WHEAT_SPAWNS = 15
+INTERVAL_BETWEEN_WHEAT_SPAWNS = 20
 WHEAT_TO_END_HARVEST = 9
 FLOURS_TO_COLLECT_ON_CRASH = 7
 DOUGH_TO_COLLECT_ON_WATERING = 5
@@ -35,7 +36,7 @@ DOUGH_TO_COLLECT_ON_WATERING = 5
 class Game:
 
     def __init__(self):
-        self.level = 0
+        self.level = 5
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -46,6 +47,7 @@ class Game:
         self.deathMsg = Reasons.ranOutOfTime
         self.last_level_completed = self.level + 0.5
         self.pause = False
+        self.matzaCollected = 0
 
     def playLevel(self):
         if self.pause:
@@ -217,7 +219,23 @@ class Game:
         pass
 
     def play_cooking(self):
-        pass
+        VisualizationService.draw_oven_bg()
+
+        if self.matzaCollected == 3:
+            self.nextLevel()
+            return
+
+        if self.matzaCollected == -3:
+            GlobalState.GAME_STATE = GameStatus.GAME_FAILED
+            return
+
+        if len(sprites) == 0:
+            sprites.add(Matza())
+
+        for sprite in sprites:
+            sprite.draw()
+
+        VisualizationService.draw_matza_score(self.matzaCollected)
 
     def nextLevel(self):
         global time, sprites, spritesSecondary, spritesThird
@@ -250,6 +268,7 @@ class Game:
             self.last_succeed = False
             self.water_flours_added = 1
             self.doughCollected = 0
+            self.matzaCollected = 0
             GlobalState.TIMER.resetTimer()
 
     @staticmethod

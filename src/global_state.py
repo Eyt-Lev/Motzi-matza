@@ -17,7 +17,7 @@ class GlobalState:
     @staticmethod
     def load_main_screen():
         pygame.display.set_icon(pygame.image.load(IMAGES_DIR / "mini_logo.png"))
-        screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT))
+        screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT), pygame.RESIZABLE)
         screen.fill((0, 255, 255))
         GlobalState.SCREEN = screen
         pygame.display.set_caption("Motzi Matza")
