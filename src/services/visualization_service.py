@@ -6,6 +6,8 @@ from paths import IMAGES_DIR, FONT_DIR, EXPLAIN_DIR
 from src.components.button import Button
 from src.game_status import GameStatus
 from src.global_state import GlobalState
+from src.services.score_service import ScoreService
+from src.services.timer_service import TimerService
 from src.tools import sine
 
 en = False
@@ -13,6 +15,7 @@ en = False
 
 def goHome():
     GlobalState.GAME_STATE = GameStatus.MAIN_MENU
+    GlobalState.GAME.reset()
 
 
 def change_lang():
@@ -41,8 +44,18 @@ class VisualizationService:
         screen.blit(title, rect)
         # Moving logo
         logo = VisualizationService.get_logo()
-        y = sine(200.0, 12680, 10.0, 70)
-        screen.blit(logo, (530, y))
+        y = sine(200.0, 12680, 10.0, 140)
+        screen.blit(logo, (640, y))
+        # Best score
+        VisualizationService.get_mc_font().render_to(
+            GlobalState.SCREEN,
+            (830, 550),
+            TimerService.get_fixedTime(
+                ScoreService.get_max_score()
+            ),
+            (255, 255, 255),
+            size=50
+        )
         # Buttons
         mainMenuStartBtn.onclickFunction = onClick
 
@@ -195,6 +208,18 @@ class VisualizationService:
         GlobalState.SCREEN.blit(bg, bg.get_rect())
 
     @staticmethod
+    def draw_win_screen(time):
+        bg = VisualizationService.get_win_screen_image()
+        GlobalState.SCREEN.blit(bg, bg.get_rect())
+        endScreenHomeBtn.draw()
+        VisualizationService.get_mc_font().render_to(
+            GlobalState.SCREEN,
+            (980, 530), time,
+            (0, 0, 0),
+            size=80
+        )
+
+    @staticmethod
     def draw_end_screen(reason):
         screen = GlobalState.SCREEN
         VisualizationService.draw_end_screen_background(screen)
@@ -286,6 +311,10 @@ class VisualizationService:
     @staticmethod
     def get_end_screen_text():
         return pygame.image.load(IMAGES_DIR / "failed_txt.png").convert_alpha()
+
+    @staticmethod
+    def get_win_screen_image():
+        return pygame.image.load(IMAGES_DIR / "win_screen.png").convert_alpha()
 
     @staticmethod
     def get_explain_box_btn():

@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 
 from config import Config
 from paths import IMAGES_DIR
@@ -17,7 +18,7 @@ class GlobalState:
     @staticmethod
     def load_main_screen():
         pygame.display.set_icon(pygame.image.load(IMAGES_DIR / "mini_logo.png"))
-        screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT), pygame.RESIZABLE)
+        screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT), HWSURFACE | DOUBLEBUF | RESIZABLE)
         screen.fill((0, 255, 255))
         GlobalState.SCREEN = screen
         pygame.display.set_caption("Motzi Matza")

@@ -13,15 +13,13 @@ class TimerService:
     def __init__(self):
         self.ticking = False
         self.time = 0
-        self.fixedTime = ""
+        self.fixedTime = "00:00"
 
     def update(self):
         self.time += 0.75
 
     def showTime(self, screen):
-        time_fixed = list(str(datetime.timedelta(minutes=self.time)))
-        del time_fixed[-3:]
-        self.fixedTime = "".join(time_fixed)
+        self.fixedTime = TimerService.get_fixedTime(self.time)
         bg = pygame.image.load(IMAGES_DIR / "timer_bg.png").convert_alpha()
         rect = bg.get_rect()
         rect.top, rect.left = 10, 0
@@ -31,6 +29,12 @@ class TimerService:
             self.fixedTime,
             (0, 0, 0), None, size=80
         )
+
+    @staticmethod
+    def get_fixedTime(time):
+        time_fixed = list(str(datetime.timedelta(minutes=time)))
+        del time_fixed[-3:]
+        return "".join(time_fixed)
 
     def resetTimer(self):
         self.ticking = False

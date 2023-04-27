@@ -12,6 +12,7 @@ from src.components.watering.flourBox import WaterFlourBox
 from src.components.watering.mixer import Mixer
 from src.game_status import GameStatus
 from src.global_state import GlobalState
+from src.services.score_service import ScoreService
 from src.services.visualization_service import VisualizationService
 
 sprites = pygame.sprite.Group()
@@ -31,6 +32,7 @@ INTERVAL_BETWEEN_WHEAT_SPAWNS = 20
 WHEAT_TO_END_HARVEST = 9
 FLOURS_TO_COLLECT_ON_CRASH = 7
 DOUGH_TO_COLLECT_ON_WATERING = 5
+saved = False
 
 
 class Game:
@@ -63,6 +65,9 @@ class Game:
             self.play_rolling()
         elif self.level == 5:  # cooking
             self.play_cooking()
+        elif self.level > 5:
+            self.finishGame()
+            return
         else:  # explanation
             self.explain()
 
@@ -81,6 +86,11 @@ class Game:
         )
 
     def explain(self):
+        # Just for testing
+        if self.level == 3.5:
+            self.level = 5
+            self.last_level_completed += 2
+            return
         if self.bg is None:
             self.bg = pygame.image.load(random.choice(VisualizationService.get_explain_backgrounds()))
         VisualizationService.draw_explain_bg(
@@ -219,6 +229,7 @@ class Game:
         pass
 
     def play_cooking(self):
+        global time
         VisualizationService.draw_oven_bg()
 
         if self.matzaCollected == 3:
@@ -226,11 +237,15 @@ class Game:
             return
 
         if self.matzaCollected == -3:
+            self.deathMsg = Reasons.wrongMatzot
             GlobalState.GAME_STATE = GameStatus.GAME_FAILED
             return
 
         if len(sprites) == 0:
-            sprites.add(Matza())
+            time += 1
+            if time == 10:
+                time = 0
+                sprites.add(Matza())
 
         for sprite in sprites:
             sprite.draw()
@@ -252,10 +267,24 @@ class Game:
             else:
                 GlobalState.TIMER.ticking = True
 
+    def finishGame(self):
+        global saved
+        VisualizationService.draw_win_screen(GlobalState.TIMER.fixedTime)
+        if not saved:
+            saved = True
+            ScoreService.update_max_score(
+                GlobalState.TIMER.time
+            )
+        self.reset()
+
+    def failed(self):
+        if self.level != 0.5:
+            GlobalState.music.play_end_sound()
+            self.reset()
+
     def reset(self):
         if self.level != 0.5:
-            global time, sprites, spritesSecondary, spritesThird
-            GlobalState.music.play_end_sound()
+            global time, sprites, spritesSecondary, spritesThird, saved
             time = 0
             sprites.empty()
             spritesSecondary.empty()
@@ -265,6 +294,8 @@ class Game:
             self.wheatsCollected = 0
             self.flourCollected = 0
             self.bg = None
+            saved = False
+            self.pause = False
             self.last_succeed = False
             self.water_flours_added = 1
             self.doughCollected = 0

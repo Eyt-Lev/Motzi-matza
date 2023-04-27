@@ -21,7 +21,7 @@ def gameplay_phase(): GlobalState.GAME.playLevel()
 
 
 def failed_phase():
-    GlobalState.GAME.reset()
+    GlobalState.GAME.failed()
     EndScreen.draw(
         GlobalState.GAME.deathMsg
     )
