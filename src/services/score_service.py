@@ -34,5 +34,7 @@ class ScoreService:
     @staticmethod
     def update_max_score(new_score):
         data = ScoreService.load_score_file()
-        data["best"] = new_score
-        ScoreService.update_score_file(data)
+        current_score = data["best"]
+        if new_score < current_score or current_score == 0:
+            data["best"] = new_score
+            ScoreService.update_score_file(data)

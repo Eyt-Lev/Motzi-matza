@@ -32,13 +32,12 @@ INTERVAL_BETWEEN_WHEAT_SPAWNS = 20
 WHEAT_TO_END_HARVEST = 9
 FLOURS_TO_COLLECT_ON_CRASH = 7
 DOUGH_TO_COLLECT_ON_WATERING = 5
-saved = False
 
 
 class Game:
 
     def __init__(self):
-        self.level = 5
+        self.level = 2.5
         self.crash_wheat_added = 0
         self.wheatsCollected = 0
         self.flourCollected = 0
@@ -86,11 +85,12 @@ class Game:
         )
 
     def explain(self):
-        # Just for testing
+        # Just for testing <---
         if self.level == 3.5:
-            self.level = 5
-            self.last_level_completed += 2
+            self.level = 4.5
+            self.last_level_completed += 1.5
             return
+        # --->
         if self.bg is None:
             self.bg = pygame.image.load(random.choice(VisualizationService.get_explain_backgrounds()))
         VisualizationService.draw_explain_bg(
@@ -267,15 +267,14 @@ class Game:
             else:
                 GlobalState.TIMER.ticking = True
 
-    def finishGame(self):
-        global saved
+    @staticmethod
+    def finishGame():
         VisualizationService.draw_win_screen(GlobalState.TIMER.fixedTime)
-        if not saved:
-            saved = True
+        timer = GlobalState.TIMER.time
+        if timer > 0:
             ScoreService.update_max_score(
-                GlobalState.TIMER.time
+                timer
             )
-        self.reset()
 
     def failed(self):
         if self.level != 0.5:

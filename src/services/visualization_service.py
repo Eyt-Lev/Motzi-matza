@@ -47,15 +47,20 @@ class VisualizationService:
         y = sine(200.0, 12680, 10.0, 140)
         screen.blit(logo, (640, y))
         # Best score
-        VisualizationService.get_mc_font().render_to(
-            GlobalState.SCREEN,
-            (830, 550),
-            TimerService.get_fixedTime(
-                ScoreService.get_max_score()
-            ),
-            (255, 255, 255),
-            size=50
+        bestScore = TimerService.get_fixedTime(
+            ScoreService.get_max_score()
         )
+        if bestScore == "0:00":
+            bestScore = "You don't have best score"
+        else:
+            bestScore = "Best Score: " + bestScore
+        text, textRect = VisualizationService.get_mc_font().render(
+            bestScore,
+            (255, 255, 255),
+            size=40
+        )
+        textRect.center = (1005, 580)
+        screen.blit(text, textRect)
         # Buttons
         mainMenuStartBtn.onclickFunction = onClick
 
