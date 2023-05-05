@@ -1,5 +1,4 @@
 import random
-
 import pygame
 
 from src.global_state import GlobalState
@@ -11,7 +10,7 @@ alreadyPressed = False
 
 class Matza(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, game):
         super().__init__()
         self.type = random.randint(0, 2)
         self.image = VisualizationService.get_matza_image(self.type)
@@ -19,6 +18,7 @@ class Matza(pygame.sprite.Sprite):
         self.x, self.y = (970, 658)
         self.time = 0
         self.rect.left, self.rect.top = self.x, self.y
+        self.game = game
 
     def got_clicked(self):
         global alreadyPressed
@@ -33,10 +33,10 @@ class Matza(pygame.sprite.Sprite):
         if self.got_clicked():
             self.kill()
             if self.type == 0:
-                GlobalState.GAME.matzaCollected += 1
+                self.game.matzaCollected += 1
                 GlobalState.music.play_success_sound()
             else:
-                GlobalState.GAME.matzaCollected -= 1
+                self.game.matzaCollected -= 1
                 GlobalState.music.play_fail_sound()
 
     def draw(self):

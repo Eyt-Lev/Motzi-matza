@@ -7,13 +7,14 @@ from src.tools import is_img_mask_collide_with_mouse
 
 class FlourBox(pygame.sprite.Sprite):
 
-    def __init__(self, position):
+    def __init__(self, position, game):
         super().__init__()
         self.image = VisualizationService.get_flour_box_img()
         self.rect = self.image.get_rect()
         self.x, self.y = position
         self.rect.left, self.rect.top = self.x, self.y
         self.alreadyPressed = False
+        self.game = game
 
     def handle_event(self):
         if pygame.mouse.get_pressed()[0]:
@@ -24,9 +25,9 @@ class FlourBox(pygame.sprite.Sprite):
 
     def on_flour_collection(self):
         GlobalState.music.play_flour_pick_up_sound()
-        GlobalState.GAME.flourCollected += 1
+        self.game.flourCollected += 1
         self.kill()
-        GlobalState.GAME.last_succeed = False
+        self.game.last_succeed = False
 
     def draw(self):
         self.handle_event()
@@ -35,6 +36,6 @@ class FlourBox(pygame.sprite.Sprite):
         if self.rect.right >= 1920:  # if it goes off-screen
             GlobalState.music.play_fail_sound()
             self.kill()
-            GlobalState.GAME.last_succeed = False
+            self.game.last_succeed = False
 
         GlobalState.SCREEN.blit(self.image, self.rect)

@@ -31,6 +31,7 @@ def main():
         state_functions[GlobalState.GAME_STATE]()
         update_game_display()
         GlobalState.music.start_background_music()
+        print(FramePerSec.get_fps())
 
 
 if __name__ == "__main__":

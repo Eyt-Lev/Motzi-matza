@@ -6,7 +6,7 @@ from src.services.visualization_service import VisualizationService
 
 class CrashWheat(pygame.sprite.Sprite):
 
-    def __init__(self, position, wheat_to_end_harvest):
+    def __init__(self, position, wheat_to_end_harvest, game):
         super().__init__()
         self.image = VisualizationService.get_wheat_image()
         self.rect = self.image.get_rect()
@@ -17,6 +17,7 @@ class CrashWheat(pygame.sprite.Sprite):
         self.gotoRight = True
         self.moverToSide = True
         self.wheat_to_end_harvest = wheat_to_end_harvest
+        self.game = game
 
     def handle_event(self):
         keys = pygame.key.get_pressed()
@@ -62,15 +63,15 @@ class CrashWheat(pygame.sprite.Sprite):
     def on_success(self):
         self.kill()
         GlobalState.music.play_success_sound()
-        GlobalState.GAME.send_flour()
-        GlobalState.GAME.crash_wheat_added += 1
-        if GlobalState.GAME.crash_wheat_added == self.wheat_to_end_harvest:
-            GlobalState.GAME.last_succeed = True
+        self.game.send_flour()
+        self.game.crash_wheat_added += 1
+        if self.game.crash_wheat_added == self.wheat_to_end_harvest:
+            self.game.last_succeed = True
         else:
-            GlobalState.GAME.add_crash_wheat()
+            self.game.add_crash_wheat()
 
     def on_fail(self):
         self.kill()
         GlobalState.music.play_fail_sound()
-        GlobalState.GAME.add_crash_wheat()
-        GlobalState.GAME.crash_wheat_added += 1
+        self.game.add_crash_wheat()
+        self.game.crash_wheat_added += 1

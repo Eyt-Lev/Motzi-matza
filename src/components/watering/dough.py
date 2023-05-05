@@ -7,7 +7,7 @@ from src.tools import is_img_mask_collide_with_mouse
 
 class Dough(pygame.sprite.Sprite):
 
-    def __init__(self, position):
+    def __init__(self, position, game):
         super().__init__()
         self.time = 0
         self.uglyTime = 0
@@ -30,6 +30,8 @@ class Dough(pygame.sprite.Sprite):
             25
         )
 
+        self.game = game
+
     def handle_event(self):
         if pygame.mouse.get_pressed()[0]:
             if not self.alreadyPressed:
@@ -39,9 +41,9 @@ class Dough(pygame.sprite.Sprite):
 
     def onPress(self):
         self.kill()
-        GlobalState.GAME.water_flours_added += 1
+        self.game.water_flours_added += 1
         if self.time > 8:
-            GlobalState.GAME.doughCollected += 1
+            self.game.doughCollected += 1
             GlobalState.music.play_success_sound()
         else:
             GlobalState.music.play_fail_sound()
@@ -61,7 +63,7 @@ class Dough(pygame.sprite.Sprite):
             color = (255, 0, 0)
             self.kill()
             GlobalState.music.play_fail_sound()
-            GlobalState.GAME.water_flours_added += 1
+            self.game.water_flours_added += 1
 
         if self.alive():
             self.pressRect = pygame.Rect(

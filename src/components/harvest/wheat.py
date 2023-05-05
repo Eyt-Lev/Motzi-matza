@@ -7,7 +7,7 @@ from src.tools import is_img_mask_collide_with_mouse
 
 class Wheat(pygame.sprite.Sprite):
 
-    def __init__(self, position, wheat_to_end_harvest):
+    def __init__(self, position, wheat_to_end_harvest, game):
         super().__init__()
         self.image = VisualizationService.get_wheat_image()
         self.rect = self.image.get_rect()
@@ -15,6 +15,7 @@ class Wheat(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = self.pos
         self.alreadyPressed = False
         self.wheat_to_end_harvest = wheat_to_end_harvest
+        self.game = game
 
     def handle_event(self):
         if not self.alreadyPressed:
@@ -25,9 +26,7 @@ class Wheat(pygame.sprite.Sprite):
     def on_wheat_collection(self):
         GlobalState.music.play_wheat_break_sound()
         self.kill()
-        GlobalState.GAME.wheatsCollected += 1
-        if GlobalState.GAME.wheatsCollected == self.wheat_to_end_harvest:
-            GlobalState.GAME.finishLevel()
+        self.game.wheatsCollected += 1
 
     def draw(self):
         self.handle_event()

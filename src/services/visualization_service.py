@@ -208,6 +208,11 @@ class VisualizationService:
         GlobalState.SCREEN.blit(bg, bg.get_rect())
 
     @staticmethod
+    def draw_rolling_bg():
+        bg = VisualizationService.get_rolling_bg()
+        GlobalState.SCREEN.blit(bg, bg.get_rect())
+
+    @staticmethod
     def draw_oven_bg():
         bg = VisualizationService.get_oven_bg()
         GlobalState.SCREEN.blit(bg, bg.get_rect())
@@ -363,6 +368,10 @@ class VisualizationService:
     @staticmethod
     def get_flour_box_img():
         return pygame.image.load(IMAGES_DIR / "flour box.png").convert_alpha()
+
+    @staticmethod
+    def get_rolling_bg():
+        return pygame.image.load(IMAGES_DIR / "rolling bg.png").convert()
 
     @staticmethod
     def get_crash_level_background():
